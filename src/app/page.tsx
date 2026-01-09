@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, MapPin, Calendar, Camera, Palmtree, Mountain, ShieldCheck } from "lucide-react";
+import { ArrowRight, MapPin, Calendar, Camera, Palmtree, Mountain, ShieldCheck, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
