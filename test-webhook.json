@@ -1,0 +1,1 @@
+{"id":"evt_test123","object":"event","type":"checkout.session.completed","data":{"object":{"id":"cs_test_123","metadata":{"booking_id":"326476ac-ec3a-4305-9400-9e0dac541a40"},"payment_intent":"pi_webhook_file_test"}}}

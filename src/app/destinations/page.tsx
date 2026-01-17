@@ -1,68 +1,73 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { MapPin, ArrowRight, Filter } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { MapPin, ArrowRight, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-const destinations = [
-  {
-    slug: "river-no-2",
-    name: "River No. 2 Beach",
-    region: "Western Area",
-    category: "Beaches",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800",
-    description: "A pristine stretch of white sand where the river meets the Atlantic ocean. perfect for a relaxing day trip from Freetown.",
-  },
-  {
-    slug: "tacugama",
-    name: "Tacugama Chimpanzee Sanctuary",
-    region: "Western Area",
-    category: "Wildlife",
-    image: "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=800",
-    description: "Founded in 1995 to rescue and rehabilitate orphaned and abandoned chimpanzees.",
-  },
-  {
-    slug: "tiwai",
-    name: "Tiwai Island",
-    region: "Eastern Province",
-    category: "Wildlife",
-    image: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800",
-    description: "One of the most important biodiversity hotspots in West Africa, home to rare primates and pygmy hippos.",
-  },
-  {
-    slug: "banana-islands",
-    name: "Banana Islands",
-    region: "Western Area",
-    category: "Adventure",
-    image: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?q=80&w=800",
-    description: "A group of islands off the coast offering diving, fishing, and a glimpse into colonial history.",
-  },
-  {
-    slug: "mount-bintumani",
-    name: "Mount Bintumani",
-    region: "Northern Province",
-    category: "Adventure",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800",
-    description: "The highest peak in Sierra Leone and West Africa, offering challenging treks and breathtaking views.",
-  },
-  {
-    slug: "tokeh-beach",
-    name: "Tokeh Beach",
-    region: "Western Area",
-    category: "Beaches",
-    image: "https://images.unsplash.com/photo-1544469537-c790382046bc?q=80&w=800",
-    description: "Famous for its stunning mountain backdrop and luxury resorts, Tokeh is the epitome of coastal relaxation.",
-  },
-];
+import { supabase } from "@/lib/supabase";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { LocationAutocomplete } from "@/components/LocationAutocomplete";
 
 const regions = ["All", "Western Area", "Northern Province", "Southern Province", "Eastern Province"];
 const categories = ["All", "Beaches", "Wildlife", "Culture", "Adventure"];
+const experienceTypes = [
+  "All",
+  "eco-tourism", 
+  "cultural festivals", 
+  "beach holidays", 
+  "historical tours", 
+  "volunteer tourism"
+];
 
 export default function DestinationsPage() {
+  const router = useRouter();
+  const [destinations, setDestinations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedExperience, setSelectedExperience] = useState("All");
+
+  useEffect(() => {
+    fetchDestinations();
+  }, [selectedRegion, selectedCategory, selectedExperience]);
+
+  const fetchDestinations = async () => {
+    setLoading(true);
+    let query = supabase.from("destinations").select("*");
+
+    if (selectedRegion !== "All") {
+      query = query.eq("region", selectedRegion);
+    }
+
+    if (selectedCategory !== "All") {
+      query = query.eq("category", selectedCategory);
+    }
+
+    if (selectedExperience !== "All") {
+      query = query.contains("experience_types", [selectedExperience]);
+    }
+
+    const { data, error } = await query;
+    if (data) {
+      setDestinations(data);
+    }
+    setLoading(false);
+  };
+
+  const hasFilters = selectedRegion !== "All" || selectedCategory !== "All" || selectedExperience !== "All";
+
+  const clearFilters = () => {
+    setSelectedRegion("All");
+    setSelectedCategory("All");
+    setSelectedExperience("All");
+  };
+
   return (
-    <div className="pt-24 pb-24">
+    <div className="pt-24 pb-24 min-h-screen">
       {/* Header */}
       <section className="bg-zinc-50 dark:bg-zinc-900 py-20 mb-12">
         <div className="mx-auto max-w-7xl px-4 text-center">
@@ -84,104 +89,151 @@ export default function DestinationsPage() {
         </div>
       </section>
 
-      {/* Filters (Mock) */}
-      <section className="mb-12 sticky top-20 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md py-4 border-y border-zinc-100 dark:border-zinc-800">
-        <div className="mx-auto max-w-7xl px-4 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4 overflow-x-auto pb-2 no-scrollbar">
-            <Filter className="h-4 w-4 text-zinc-400 shrink-0" />
-            <div className="flex gap-2">
-              {regions.map((region) => (
-                <Badge
-                  key={region}
-                  variant={region === "All" ? "default" : "outline"}
-                  className="cursor-pointer whitespace-nowrap rounded-full px-4 py-1.5"
-                >
-                  {region}
-                </Badge>
-              ))}
+      {/* Filters & Search */}
+      <section className="mb-12 sticky top-20 z-40 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md py-6 border-y border-zinc-100 dark:border-zinc-800 shadow-sm">
+        <div className="mx-auto max-w-7xl px-4 space-y-6">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="w-full md:w-96">
+              <LocationAutocomplete 
+                onSelect={(loc) => router.push(`/destinations/${loc.slug}`)}
+                placeholder="Find a town or spot (e.g. Bonthe)..."
+              />
+            </div>
+            
+            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar w-full md:w-auto">
+              <Filter className="h-4 w-4 text-zinc-400 shrink-0" />
+              <div className="flex gap-2">
+                {experienceTypes.map((type) => (
+                  <Badge
+                    key={type}
+                    onClick={() => setSelectedExperience(type)}
+                    variant={selectedExperience === type ? "default" : "outline"}
+                    className={`cursor-pointer whitespace-nowrap rounded-full px-4 py-1.5 transition-all ${
+                      selectedExperience === type ? "bg-emerald-600" : "hover:border-emerald-500 hover:text-emerald-500"
+                    }`}
+                  >
+                    {type}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="hidden md:flex gap-2">
-            {categories.map((cat) => (
-              <Badge
-                key={cat}
-                variant={cat === "All" ? "secondary" : "outline"}
-                className="cursor-pointer whitespace-nowrap rounded-full px-4 py-1.5"
+
+          <div className="flex flex-wrap items-center gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-4">
+            <select 
+              value={selectedRegion} 
+              onChange={(e) => setSelectedRegion(e.target.value)}
+              className="bg-transparent text-sm font-medium border border-zinc-200 dark:border-zinc-800 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="All">All Regions</option>
+              {regions.filter(r => r !== "All").map(r => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+
+            <select 
+              value={selectedCategory} 
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-transparent text-sm font-medium border border-zinc-200 dark:border-zinc-800 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="All">All Categories</option>
+              {categories.filter(c => c !== "All").map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+
+            {hasFilters && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearFilters}
+                className="text-xs text-rose-500 hover:text-rose-600"
               >
-                {cat}
-              </Badge>
-            ))}
+                Clear Filters
+              </Button>
+            )}
           </div>
         </div>
       </section>
 
       {/* Grid */}
       <section className="mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {destinations.map((dest, idx) => (
-            <motion.div
-              key={dest.slug}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              className="group"
-            >
-              <Link href={`/destinations/${dest.slug}`}>
-                <div className="relative h-[400px] overflow-hidden rounded-[32px] mb-6">
-                  <img
-                    src={dest.image}
-                    alt={dest.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-                  <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white border-none">
-                        {dest.category}
-                      </Badge>
-                      <span className="text-xs font-medium text-zinc-300 flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {dest.region}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold font-playfair mb-2">{dest.name}</h3>
-                    <p className="text-sm text-zinc-300 line-clamp-2 mb-4 group-hover:line-clamp-none transition-all">
-                      {dest.description}
-                    </p>
-                    <div className="flex items-center gap-2 text-emerald-400 font-semibold group-hover:translate-x-2 transition-transform">
-                      Explore destination <ArrowRight className="h-4 w-4" />
-                    </div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="h-[400px] rounded-[32px] bg-zinc-100 dark:bg-zinc-800 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence mode="popLayout">
+              {destinations.map((dest) => (
+                <motion.div
+                  key={dest.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="group relative"
+                >
+                  <div className="absolute top-6 right-6 z-10">
+                    <FavoriteButton destinationId={dest.id} />
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+                  
+                  <Link href={`/destinations/${dest.slug}`}>
+                    <div className="relative h-[400px] overflow-hidden rounded-[32px] mb-6 shadow-lg">
+                      <Image
+                        src={dest.image}
+                        alt={dest.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                      <div className="absolute bottom-6 left-6 right-6 text-white">
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white border-none px-3 py-1">
+                            {dest.category}
+                          </Badge>
+                          {dest.experience_types?.map((type: string) => (
+                            <Badge key={type} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-md text-[10px] uppercase tracking-wider">
+                              {type}
+                            </Badge>
+                          ))}
+                        </div>
+                        <h3 className="text-2xl font-bold font-playfair mb-2">{dest.name}</h3>
+                        <div className="flex items-center gap-1.5 text-xs text-zinc-300 mb-3">
+                          <MapPin className="h-3 w-3 text-emerald-400" />
+                          {dest.region}
+                        </div>
+                        <p className="text-sm text-zinc-300 line-clamp-2 mb-4">
+                          {dest.description}
+                        </p>
+                        <div className="flex items-center gap-2 text-emerald-400 font-semibold group-hover:translate-x-2 transition-transform">
+                          Explore destination <ArrowRight className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </AnimatePresence>
 
-      {/* Map CTA */}
-      <section className="mt-24 mx-auto max-w-7xl px-4">
-        <div className="bg-zinc-900 rounded-[40px] p-8 md:p-16 text-white flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1">
-            <h2 className="text-3xl md:text-5xl font-bold font-playfair mb-6">Explore the Interactive Map</h2>
-            <p className="text-zinc-400 text-lg mb-8">
-              Plan your journey geographically. See where all our destinations are located relative to Lungi International Airport and Freetown.
-            </p>
-            <Button size="lg" className="bg-white text-black hover:bg-zinc-200 rounded-full px-8">
-              Open Map
-            </Button>
+            {destinations.length === 0 && (
+              <div className="col-span-full py-20 text-center">
+                <p className="text-xl text-zinc-500">No destinations found matching your criteria.</p>
+                <Button 
+                  variant="link" 
+                  onClick={clearFilters}
+                  className="mt-4 text-emerald-600"
+                >
+                  Reset all filters
+                </Button>
+              </div>
+            )}
           </div>
-          <div className="flex-1 w-full h-[300px] md:h-[400px] bg-zinc-800 rounded-3xl overflow-hidden relative">
-             <div className="absolute inset-0 flex items-center justify-center">
-                <MapPin className="h-12 w-12 text-emerald-500 animate-bounce" />
-             </div>
-             <img 
-               src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=1200" 
-               alt="Map placeholder" 
-               className="w-full h-full object-cover opacity-30"
-             />
-          </div>
-        </div>
+        )}
       </section>
     </div>
   );

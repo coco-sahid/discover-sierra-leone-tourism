@@ -1,59 +1,60 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { MapPin, ArrowLeft, Clock, Info, CheckCircle2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const destinationData: Record<string, any> = {
-  "river-no-2": {
-    name: "River No. 2 Beach",
-    region: "Western Area",
-    category: "Beaches",
-    images: [
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200",
-      "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=800",
-      "https://images.unsplash.com/photo-1544469537-c790382046bc?q=80&w=800",
-    ],
-    description: "Voted one of the most beautiful beaches in the world, River No. 2 Beach is a community-run project that offers a pristine stretch of white sand where the river meets the Atlantic ocean. It is the perfect place for swimming, sunbathing, and enjoying fresh lobster and fish caught by local fishermen.",
-    practical: {
-      gettingThere: "Located 45 minutes south of Freetown by road. Taxis and private cars are readily available.",
-      bestTime: "Dry season (November to April) is best for sun and clear waters.",
-      fees: "Small entry fee (approx. $2) which goes directly to the community fund.",
-    },
-    highlights: ["Crystal clear river water", "White powdery sand", "Fresh seafood beach bars", "Boat trips up the river"],
-  },
-  "tacugama": {
-    name: "Tacugama Chimpanzee Sanctuary",
-    region: "Western Area",
-    category: "Wildlife",
-    images: [
-      "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=1200",
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?q=80&w=800",
-    ],
-    description: "Established in 1995, Tacugama Chimpanzee Sanctuary is home to rescued chimpanzees and is a vital hub for conservation in Sierra Leone. Located within the Western Area Peninsula National Park, the sanctuary offers forest walks and educational tours that provide deep insights into the lives of our closest relatives.",
-    practical: {
-      gettingThere: "30 minutes from central Freetown. Accessible via Regent Road.",
-      bestTime: "Year-round, but tours are best in the morning or late afternoon.",
-      fees: "Tour fees apply. Pre-booking is recommended.",
-    },
-    highlights: ["Guided sanctuary tours", "Bird watching", "Eco-lodges for overnight stays", "Conservation education center"],
-  },
-};
+import Image from "next/image";
+import { MapPin, ArrowLeft, Clock, Info, CheckCircle2, Loader2 } from "lucide-react";
 
 export default function DestinationDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
-  const dest = destinationData[slug];
+  
+  const [dest, setDest] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchDestination() {
+      try {
+        const { data, error } = await supabase
+          .from("destinations")
+          .select("*")
+          .eq("slug", slug)
+          .single();
+
+        if (error) throw error;
+        setDest(data);
+      } catch (err) {
+        console.error("Error fetching destination:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slug) {
+      fetchDestination();
+    }
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="pt-32 pb-32 flex flex-col items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mb-4" />
+        <p className="text-zinc-500">Discovering Sierra Leone...</p>
+      </div>
+    );
+  }
 
   if (!dest) {
     return (
       <div className="pt-32 pb-32 text-center">
-        <h1 className="text-2xl font-bold">Destination not found</h1>
-        <Button onClick={() => router.push("/destinations")} variant="link">Back to destinations</Button>
+        <h1 className="text-2xl font-bold mb-4">Destination not found</h1>
+        <p className="text-zinc-500 mb-8">We couldn't find the destination you're looking for.</p>
+        <Button onClick={() => router.push("/destinations")} variant="outline" className="rounded-full">
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to destinations
+        </Button>
       </div>
     );
   }
@@ -62,9 +63,11 @@ export default function DestinationDetailPage() {
     <div className="pt-20 pb-24">
       {/* Hero Gallery */}
       <section className="relative h-[60vh] overflow-hidden">
-        <img
-          src={dest.images[0]}
+        <Image
+          src={dest.image}
           alt={dest.name}
+          fill
+          priority
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40" />
@@ -86,6 +89,7 @@ export default function DestinationDetailPage() {
         </div>
       </section>
 
+
       {/* Content */}
       <section className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
@@ -95,22 +99,24 @@ export default function DestinationDetailPage() {
               {dest.description}
             </p>
 
-            <div className="mb-12">
-               <h3 className="text-xl font-bold mb-6">Highlights</h3>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {dest.highlights.map((h: string) => (
-                    <div key={h} className="flex items-center gap-3 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900">
-                       <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                       <span className="font-medium">{h}</span>
-                    </div>
-                  ))}
-               </div>
-            </div>
+            {dest.highlights && dest.highlights.length > 0 && (
+              <div className="mb-12">
+                 <h3 className="text-xl font-bold mb-6">Highlights</h3>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {dest.highlights.map((h: string) => (
+                      <div key={h} className="flex items-center gap-3 p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900">
+                         <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                         <span className="font-medium">{h}</span>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+            )}
 
             <Tabs defaultValue="practical" className="w-full">
               <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent mb-8">
                 <TabsTrigger value="practical" className="rounded-none border-b-2 border-transparent data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent px-6 py-4 font-bold">Practical Info</TabsTrigger>
-                <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent px-6 py-4 font-bold">What to pack</TabsTrigger>
+                <TabsTrigger value="packing" className="rounded-none border-b-2 border-transparent data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent px-6 py-4 font-bold">What to pack</TabsTrigger>
               </TabsList>
               <TabsContent value="practical">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -119,25 +125,25 @@ export default function DestinationDetailPage() {
                          <Clock className="h-4 w-4 text-emerald-500" />
                          Best time to visit
                       </div>
-                      <p className="text-sm text-zinc-500">{dest.practical.bestTime}</p>
+                      <p className="text-sm text-zinc-500">{dest.best_time || "Dry season (November to April) is generally recommended."}</p>
                    </div>
                    <div className="space-y-2">
                       <div className="flex items-center gap-2 text-zinc-900 dark:text-white font-bold mb-2">
                          <MapPin className="h-4 w-4 text-emerald-500" />
                          Getting there
                       </div>
-                      <p className="text-sm text-zinc-500">{dest.practical.gettingThere}</p>
+                      <p className="text-sm text-zinc-500">{dest.getting_there || "Accessible by road or boat depending on the location."}</p>
                    </div>
                    <div className="space-y-2">
                       <div className="flex items-center gap-2 text-zinc-900 dark:text-white font-bold mb-2">
                          <Info className="h-4 w-4 text-emerald-500" />
                          Entry fees
                       </div>
-                      <p className="text-sm text-zinc-500">{dest.practical.fees}</p>
+                      <p className="text-sm text-zinc-500">{dest.fees || "Local fees may apply."}</p>
                    </div>
                 </div>
               </TabsContent>
-              <TabsContent value="reviews">
+              <TabsContent value="packing">
                 <p className="text-zinc-500">Sunscreen, insect repellent, comfortable walking shoes, and a light rain jacket are recommended for most destinations in Sierra Leone.</p>
               </TabsContent>
             </Tabs>
@@ -148,21 +154,42 @@ export default function DestinationDetailPage() {
                 <div className="bg-zinc-50 dark:bg-zinc-900 p-8 rounded-[32px] border border-zinc-100 dark:border-zinc-800">
                    <h3 className="text-xl font-bold mb-6">Plan your visit</h3>
                    <p className="text-sm text-zinc-500 mb-8">Ready to explore {dest.name}? Let us help you connect with local guides and transport.</p>
-                   <div className="space-y-4">
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-12">Book a Local Guide</Button>
-                      <Button variant="outline" className="w-full rounded-full h-12">Inquire about transport</Button>
-                   </div>
+<div className="space-y-4">
+                        <Button onClick={() => setBookingModalOpen(true)} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-12">Book a Local Guide</Button>
+                        <Button variant="outline" className="w-full rounded-full h-12" onClick={() => setBookingModalOpen(true)}>Inquire about transport</Button>
+                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                   {dest.images.slice(1).map((img: string, i: number) => (
-                      <img key={i} src={img} alt="Gallery" className="rounded-2xl h-32 w-full object-cover" />
-                   ))}
-                </div>
-             </div>
-          </div>
+<div className="grid grid-cols-2 gap-4">
+                     <img src={dest.image} alt="Gallery" className="rounded-2xl h-32 w-full object-cover" />
+                   </div>
+
+                  {dest.latitude && dest.longitude && (
+                    <WeatherWidget 
+                      latitude={Number(dest.latitude)} 
+                      longitude={Number(dest.longitude)} 
+                      locationName={dest.name}
+                    />
+                  )}
+                 </div>
+              </div>
+            </div>
+
+<ReviewsSection destinationId={dest.id} destinationName={dest.name} />
+          </section>
+
+          {dest && (
+            <BookingModal
+              isOpen={bookingModalOpen}
+              onClose={() => setBookingModalOpen(false)}
+              destination={{
+                id: dest.id,
+                name: dest.name,
+                region: dest.region,
+                image: dest.image,
+              }}
+            />
+          )}
         </div>
-      </section>
-    </div>
-  );
-}
+    );
+  }

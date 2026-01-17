@@ -8,28 +8,28 @@ const experiences = [
   {
     title: "Surfing in Bureh Beach",
     description: "Catch the perfect wave at Bureh Beach, home to Sierra Leone's first surf club. Whether you're a pro or a beginner, the warm Atlantic waters and consistent swells provide an unforgettable experience.",
-    image: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=800",
+    image: "/bureh.jpg",
     icon: Waves,
     color: "bg-blue-500",
   },
   {
     title: "Chimpanzee Trekking",
     description: "Venture into the lush rainforests of Tacugama or Tiwai Island to spot our closest relatives in their natural habitat. A truly humbling and educational encounter with nature.",
-    image: "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=800",
+    image: "/chimp.jpg",
     icon: Trees,
     color: "bg-emerald-500",
   },
   {
     title: "Cultural Festivals",
     description: "Immerse yourself in the vibrant sounds and colors of Sierra Leone. From the Freetown Music Festival to traditional chiefdom celebrations, experience the soul of our nation.",
-    image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=800",
+    image: "/cult.jpg",
     icon: Music,
     color: "bg-purple-500",
   },
   {
     title: "Authentic Gastronomy",
     description: "Savor the flavors of West Africa. From spicy cassava leaf stew to fresh lobster on the beach, our cuisine is a reflection of our rich cultural tapestry.",
-    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800",
+    image: "/adventure activites.jpg",
     icon: Utensils,
     color: "bg-orange-500",
   },
@@ -38,10 +38,10 @@ const experiences = [
 export default function ExperiencesPage() {
   return (
     <div className="pt-24 pb-24">
-      <section className="bg-zinc-950 text-white py-24 mb-16 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20">
-           <img src="https://images.unsplash.com/photo-1523805081730-614449339e7a?q=80&w=1600" className="w-full h-full object-cover" />
-        </div>
+        <section className="bg-zinc-950 text-white py-24 mb-16 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-20">
+             <img src="/adv.jpg" className="w-full h-full object-cover" />
+          </div>
         <div className="mx-auto max-w-7xl px-4 relative z-10 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}

@@ -113,19 +113,19 @@ export default function ErrorReporter({ error, reset }: ReporterProps) {
                 <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
                   Error details
                 </summary>
-                <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto">
-                  {error.message}
-                  {error.stack && (
-                    <div className="mt-2 text-muted-foreground">
-                      {error.stack}
-                    </div>
-                  )}
-                  {error.digest && (
-                    <div className="mt-2 text-muted-foreground">
-                      Digest: {error.digest}
-                    </div>
-                  )}
-                </pre>
+                <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto whitespace-pre-wrap">
+                    {error.message}
+                    {error.stack && (
+                      <span className="block mt-2 text-muted-foreground">
+                        {error.stack}
+                      </span>
+                    )}
+                    {error.digest && (
+                      <span className="block mt-2 text-muted-foreground">
+                        Digest: {error.digest}
+                      </span>
+                    )}
+                  </pre>
               </details>
             )}
           </div>

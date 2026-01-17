@@ -8,7 +8,7 @@ const stories = [
   {
     title: "A Day in Sherbro Island: Where Time Stands Still",
     excerpt: "Discover the hidden history and untouched beauty of one of Sierra Leone's most remote and enchanting islands.",
-    image: "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?q=80&w=800",
+    image: "/no2.jpg",
     author: "Aminata Kamara",
     date: "May 12, 2024",
     category: "Destinations",
@@ -16,7 +16,7 @@ const stories = [
   {
     title: "From Lungi to Freetown: My First Water Taxi Experience",
     excerpt: "The wind in your hair and the Freetown skyline in the distance—why the water taxi is more than just transport.",
-    image: "https://images.unsplash.com/photo-1544469537-c790382046bc?q=80&w=800",
+    image: "/tokeh.jpg",
     author: "James Wilson",
     date: "April 28, 2024",
     category: "Travel Tips",
@@ -24,7 +24,7 @@ const stories = [
   {
     title: "The Flavors of Freetown: A Street Food Guide",
     excerpt: "From spicy ginger beer to the best fry-fry in the city, here is what you must eat when visiting our capital.",
-    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800",
+    image: "/adventure activites.jpg",
     author: "Chef Bintu",
     date: "April 15, 2024",
     category: "Gastronomy",
@@ -107,11 +107,11 @@ export default function StoriesPage() {
            ))}
         </div>
 
-        {/* Video CTA */}
-        <section className="mt-32">
-           <div className="relative h-[500px] overflow-hidden rounded-[40px] flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1544469537-c790382046bc?q=80&w=1600" className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/60" />
+         {/* Video CTA */}
+         <section className="mt-32">
+            <div className="relative h-[500px] overflow-hidden rounded-[40px] flex items-center justify-center">
+               <img src="/adv.jpg" className="absolute inset-0 w-full h-full object-cover" />
+               <div className="absolute inset-0 bg-black/60" />
               <div className="relative z-10 text-center text-white px-4">
                  <h2 className="text-3xl md:text-5xl font-bold font-playfair mb-8">Experience Sierra Leone in Motion</h2>
                  <Button size="lg" className="bg-white text-black hover:bg-zinc-200 rounded-full h-16 px-10 gap-3">
