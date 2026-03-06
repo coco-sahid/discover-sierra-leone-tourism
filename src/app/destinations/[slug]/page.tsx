@@ -5,6 +5,13 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { MapPin, ArrowLeft, Clock, Info, CheckCircle2, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import WeatherWidget from "@/components/WeatherWidget";
+import BookingModal from "@/components/BookingModal";
+import ReviewsSection from "@/components/ReviewsSection";
 
 export default function DestinationDetailPage() {
   const params = useParams();
