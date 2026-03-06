@@ -21,6 +21,13 @@ interface Destination {
   longitude: number;
 }
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 interface MapViewProps {
   destinations: Destination[];
   selectedRegion?: string;
@@ -162,7 +169,7 @@ export function MapView({ destinations, selectedRegion = "All", onRegionChange }
                 <div className="w-64">
                   <div className="relative h-32 -mx-3 -mt-3 mb-3 overflow-hidden rounded-t-lg">
                     <img 
-                      src={dest.image} 
+                      src={getImageUrl(dest.image)} 
                       alt={dest.name}
                       className="w-full h-full object-cover"
                     />

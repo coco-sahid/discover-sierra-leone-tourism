@@ -368,3 +368,5 @@ export function ReviewsSection({ destinationId, destinationName }: ReviewsSectio
     </div>
   );
 }
+
+export default ReviewsSection;

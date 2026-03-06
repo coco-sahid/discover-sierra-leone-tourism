@@ -22,6 +22,13 @@ const iconMap: Record<string, any> = {
   Home: HomeIcon
 };
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 function StatSkeleton() {
   return (
     <div className="p-6 bg-zinc-50 dark:bg-zinc-900 rounded-3xl border border-zinc-100 dark:border-zinc-800">
@@ -345,7 +352,7 @@ export function HomeClient() {
                     <Link href={`/destinations/${dest.slug}`} className="block h-full group">
                       <div className={`relative overflow-hidden rounded-3xl ${idx === 0 ? "h-full min-h-[500px]" : "h-[240px]"}`}>
                         <Image
-                          src={dest.image}
+                          src={getImageUrl(dest.image)}
                           alt={dest.name}
                           fill
                           sizes={idx === 0 ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, 33vw"}

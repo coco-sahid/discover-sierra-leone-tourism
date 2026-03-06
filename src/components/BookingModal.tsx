@@ -6,6 +6,13 @@ import { X, Calendar, Users, Loader2, MapPin, Compass, Car, Home } from "lucide-
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -127,7 +134,7 @@ export function BookingModal({ isOpen, onClose, destination }: BookingModalProps
             <div className="relative">
               <div className="h-32 overflow-hidden rounded-t-3xl">
                 <img
-                  src={destination.image}
+                  src={getImageUrl(destination.image)}
                   alt={destination.name}
                   className="w-full h-full object-cover"
                 />
@@ -246,3 +253,5 @@ export function BookingModal({ isOpen, onClose, destination }: BookingModalProps
     </AnimatePresence>
   );
 }
+
+export default BookingModal;

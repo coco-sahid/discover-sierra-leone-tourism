@@ -180,3 +180,5 @@ export function WeatherWidget({ latitude, longitude, locationName }: WeatherWidg
     </motion.div>
   );
 }
+
+export default WeatherWidget;

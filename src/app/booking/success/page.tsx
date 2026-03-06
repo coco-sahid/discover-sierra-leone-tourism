@@ -7,6 +7,13 @@ import { CheckCircle2, Calendar, Users, MapPin, ArrowRight, Loader2 } from "luci
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -95,7 +102,7 @@ export default function BookingSuccessPage() {
           {destination && (
             <div className="flex items-start gap-4 mb-6 pb-6 border-b border-zinc-100 dark:border-zinc-800">
               <img
-                src={destination.image}
+                src={getImageUrl(destination.image)}
                 alt={destination.name}
                 className="w-24 h-24 rounded-2xl object-cover"
               />

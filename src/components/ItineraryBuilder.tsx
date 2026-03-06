@@ -31,6 +31,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 interface Destination {
   id: string;
   name: string;
@@ -544,7 +551,7 @@ export function ItineraryBuilder() {
                     >
                       <div className="relative overflow-hidden rounded-xl w-20 h-20 shrink-0">
                         <img 
-                          src={dest.image} 
+                          src={getImageUrl(dest.image)} 
                           alt={dest.name} 
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />

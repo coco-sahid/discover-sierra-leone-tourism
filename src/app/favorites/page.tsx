@@ -10,6 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/FavoriteButton";
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 export default function FavoritesPage() {
   const { user, loading: authLoading } = useAuth();
   const [favorites, setFavorites] = useState<any[]>([]);
@@ -102,7 +109,7 @@ export default function FavoritesPage() {
                   <Link href={`/destinations/${dest.slug}`}>
                     <div className="relative h-[400px] overflow-hidden rounded-[32px] mb-6 shadow-lg">
                       <img
-                        src={dest.image}
+                        src={getImageUrl(dest.image)}
                         alt={dest.name}
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />

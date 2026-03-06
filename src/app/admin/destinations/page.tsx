@@ -16,6 +16,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 export default function DestinationsAdmin() {
   const [destinations, setDestinations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -117,7 +124,7 @@ export default function DestinationsAdmin() {
                       <div className="flex items-center gap-4">
                         {dest.image && (
                           <img 
-                            src={dest.image} 
+                            src={getImageUrl(dest.image)} 
                             alt={dest.name} 
                             className="w-12 h-12 rounded-xl object-cover border border-zinc-200 dark:border-zinc-700"
                           />

@@ -23,6 +23,13 @@ const experienceTypes = [
   "volunteer tourism"
 ];
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 export default function DestinationsPage() {
   const router = useRouter();
   const [destinations, setDestinations] = useState<any[]>([]);
@@ -184,7 +191,7 @@ export default function DestinationsPage() {
                   <Link href={`/destinations/${dest.slug}`}>
                     <div className="relative h-[400px] overflow-hidden rounded-[32px] mb-6 shadow-lg">
                       <Image
-                        src={dest.image}
+                        src={getImageUrl(dest.image)}
                         alt={dest.name}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

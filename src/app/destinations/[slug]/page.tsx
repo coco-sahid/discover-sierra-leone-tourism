@@ -13,6 +13,13 @@ import WeatherWidget from "@/components/WeatherWidget";
 import BookingModal from "@/components/BookingModal";
 import ReviewsSection from "@/components/ReviewsSection";
 
+const getImageUrl = (image: string | undefined): string => {
+  if (!image) return '/no2.jpg'; // fallback
+  if (image.startsWith('http')) return image; // remote URL
+  if (image.startsWith('/')) return image; // already has slash
+  return `/${image}`; // add slash for local files
+};
+
 export default function DestinationDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -29,12 +36,20 @@ export default function DestinationDetailPage() {
           .from("destinations")
           .select("*")
           .eq("slug", slug)
-          .single();
+          .limit(1);
 
-        if (error) throw error;
-        setDest(data);
-      } catch (err) {
-        console.error("Error fetching destination:", err);
+        if (error) {
+          console.error("Error fetching destination:", error.message || error.code || error);
+          throw error;
+        }
+        
+        if (data && data.length > 0) {
+          setDest(data[0]);
+        } else {
+          console.error("Destination not found for slug:", slug);
+        }
+      } catch (err: any) {
+        console.error("Error fetching destination:", err.message || err.code || String(err));
       } finally {
         setLoading(false);
       }
@@ -71,7 +86,7 @@ export default function DestinationDetailPage() {
       {/* Hero Gallery */}
       <section className="relative h-[60vh] overflow-hidden">
         <Image
-          src={dest.image}
+          src={getImageUrl(dest.image)}
           alt={dest.name}
           fill
           priority
@@ -168,7 +183,7 @@ export default function DestinationDetailPage() {
                 </div>
 
 <div className="grid grid-cols-2 gap-4">
-                     <img src={dest.image} alt="Gallery" className="rounded-2xl h-32 w-full object-cover" />
+                     <img src={getImageUrl(dest.image)} alt="Gallery" className="rounded-2xl h-32 w-full object-cover" />
                    </div>
 
                   {dest.latitude && dest.longitude && (
