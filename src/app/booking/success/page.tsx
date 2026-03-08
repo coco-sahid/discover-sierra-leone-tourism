@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,13 +9,13 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
 const getImageUrl = (image: string | undefined): string => {
-  if (!image) return '/no2.jpg'; // fallback
-  if (image.startsWith('http')) return image; // remote URL
-  if (image.startsWith('/')) return image; // already has slash
-  return `/${image}`; // add slash for local files
+  if (!image) return '/no2.jpg';
+  if (image.startsWith('http')) return image;
+  if (image.startsWith('/')) return image;
+  return `/${image}`;
 };
 
-export default function BookingSuccessPage() {
+function BookingSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bookingId = searchParams.get("booking_id");
@@ -183,5 +184,18 @@ export default function BookingSuccessPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen pt-32 pb-20 flex flex-col items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mb-4" />
+        <p className="text-zinc-500">Loading...</p>
+      </div>
+    }>
+      <BookingSuccessContent />
+    </Suspense>
   );
 }
