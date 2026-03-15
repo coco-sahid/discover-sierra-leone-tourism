@@ -19,6 +19,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://discover-sierra-leone-tourism-pink.vercel.app"),
   title: "Sierra Leone Tourism | Discover the Lion Mountain",
   description: "Explore Sierra Leone's pristine beaches, wildlife sanctuaries, and rich cultural heritage. Plan your authentic West African adventure today.",
   openGraph: {

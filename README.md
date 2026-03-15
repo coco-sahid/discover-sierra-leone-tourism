@@ -103,7 +103,7 @@ Protected admin routes for managing destinations (CRUD operations) and viewing t
 
 ## Author
 
-Created for [Your Course Name] at [Your School Name]
+Created by Chernor Sidu Jalloh aT Limkokwing University of creative Technology.
 
 ## License
 
