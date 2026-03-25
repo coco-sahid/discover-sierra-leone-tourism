@@ -55,7 +55,7 @@ export default function CalendarPage() {
               transition={{ delay: idx * 0.1 }}
               className="flex flex-col md:flex-row gap-8 p-8 rounded-[32px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 hover:shadow-lg transition-shadow"
             >
-              <div className="flex flex-col items-center justify-center bg-emerald-600 text-white rounded-2xl w-full md:w-32 h-32 shrink-0">
+              <div className="flex flex-col items-center justify-center bg-emerald-600 text-white rounded-2xl w-32 mx-auto md:mx-0 h-32 shrink-0">
                  <span className="text-xs font-bold uppercase tracking-widest">{event.month}</span>
                  <span className="text-4xl font-bold font-playfair">{event.day}</span>
               </div>

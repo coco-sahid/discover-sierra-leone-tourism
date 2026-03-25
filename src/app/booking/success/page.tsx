@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { CheckCircle2, Calendar, Users, MapPin, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 
-export default function BookingSuccessPage() {
+function BookingSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const bookingId = searchParams.get("booking_id");
-  
+
   const [booking, setBooking] = useState<any>(null);
   const [destination, setDestination] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -91,7 +91,7 @@ export default function BookingSuccessPage() {
           className="bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 p-8 mb-8"
         >
           <h2 className="text-xl font-bold mb-6">Booking Details</h2>
-          
+
           {destination && (
             <div className="flex items-start gap-4 mb-6 pb-6 border-b border-zinc-100 dark:border-zinc-800">
               <img
@@ -176,5 +176,20 @@ export default function BookingSuccessPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen pt-32 pb-20 flex flex-col items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mb-4" />
+          <p className="text-zinc-500">Loading booking details...</p>
+        </div>
+      }
+    >
+      <BookingSuccessContent />
+    </Suspense>
   );
 }

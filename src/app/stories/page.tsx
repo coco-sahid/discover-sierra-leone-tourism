@@ -42,7 +42,7 @@ export default function StoriesPage() {
                 Dive deeper into the heart of Sierra Leone through the eyes of locals and travelers alike. Discover stories of conservation, culture, and adventure.
               </p>
            </div>
-           <div className="flex gap-2">
+           <div className="flex flex-wrap gap-2">
               {["All", "Destinations", "Travel Tips", "Gastronomy", "Culture"].map((cat) => (
                 <button key={cat} className="px-4 py-2 rounded-full border border-zinc-200 text-sm font-medium hover:bg-zinc-900 hover:text-white transition-colors">
                   {cat}

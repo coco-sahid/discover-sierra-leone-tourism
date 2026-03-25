@@ -101,7 +101,7 @@ export function HomeClient() {
   return (
     <div className="relative">
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] lg:h-screen w-full overflow-hidden flex items-center bg-white dark:bg-zinc-950 pt-20 lg:pt-0">
+        <section className="relative min-h-[80vh] lg:h-screen w-full overflow-hidden flex items-center bg-white dark:bg-zinc-950 pt-20 lg:pt-0">
           <div className="mx-auto max-w-7xl px-4 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Text Side */}
@@ -165,7 +165,7 @@ export function HomeClient() {
               transition={{ duration: 1.2, ease: "easeOut" }}
               className="relative order-1 lg:order-2 flex justify-center"
             >
-              <div className="relative w-full max-w-2xl aspect-square flex items-center justify-center">
+              <div className="relative w-full max-w-2xl aspect-square max-h-[250px] sm:max-h-[350px] lg:max-h-none flex items-center justify-center">
                 <div className="absolute inset-0 bg-emerald-500/5 rounded-full blur-3xl -z-10" />
                 <Globe />
                 
@@ -174,7 +174,7 @@ export function HomeClient() {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1, type: "spring" }}
-                  className="absolute top-1/4 right-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-emerald-500/20 z-20"
+                  className="absolute top-1/4 right-0 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-emerald-500/20 z-20 hidden md:block"
                 >
                   <div className="flex items-center gap-3">
                     <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -192,7 +192,7 @@ export function HomeClient() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-400 dark:text-zinc-600 text-sm"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 text-zinc-400 dark:text-zinc-600 text-sm"
         >
           <span className="uppercase tracking-widest text-[10px] font-bold">Discover More</span>
           <motion.div

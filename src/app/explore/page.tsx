@@ -70,8 +70,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen pt-20">
-      <div className="flex flex-col lg:flex-row h-[calc(100vh-80px)]">
-        <aside className="w-full lg:w-80 bg-white dark:bg-zinc-950 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 p-6 overflow-y-auto shadow-xl z-20">
+      <div className="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-80px)]">
+        <aside className="w-full lg:w-80 max-h-[50vh] lg:max-h-none bg-white dark:bg-zinc-950 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 p-6 overflow-y-auto shadow-xl z-20">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -142,7 +142,7 @@ export default function ExplorePage() {
           </motion.div>
         </aside>
 
-        <main className="flex-1 relative bg-zinc-100">
+        <main className="flex-1 relative bg-zinc-100 min-h-[50vh]">
           {loading ? (
             <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 animate-pulse flex items-center justify-center">
               <MapPin className="w-12 h-12 text-zinc-400 animate-bounce" />

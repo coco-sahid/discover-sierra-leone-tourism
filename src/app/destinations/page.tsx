@@ -100,9 +100,9 @@ export default function DestinationsPage() {
               />
             </div>
             
-            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar w-full md:w-auto">
+            <div className="flex items-center gap-3 w-full md:w-auto">
               <Filter className="h-4 w-4 text-zinc-400 shrink-0" />
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {experienceTypes.map((type) => (
                   <Badge
                     key={type}

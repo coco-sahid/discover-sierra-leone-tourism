@@ -3,41 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  User, 
-  Calendar, 
-  Heart, 
-  Star, 
-  MapPin, 
-  Clock, 
-  CheckCircle2,
-  XCircle,
-  Loader2,
-  ArrowRight,
-  LogOut,
-  Map as MapIcon,
-  Trash2,
-  ExternalLink,
-  Navigation
-} from "lucide-center";
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Save, 
-  TrendingUp,
-  DollarSign,
-  Compass
-} from "lucide-react"; // I'll use lucide-react for consistency
-
-// Wait, I should stick to the icons already imported or use lucide-react consistently
-import { 
-  User as UserIcon, 
-  Calendar as CalendarIcon, 
-  Heart as HeartIcon, 
-  Star as StarIcon, 
-  MapPin as MapPinIcon, 
-  Clock as ClockIcon, 
+import {
+  User as UserIcon,
+  Calendar as CalendarIcon,
+  Heart as HeartIcon,
+  Star as StarIcon,
+  MapPin as MapPinIcon,
+  Clock as ClockIcon,
   CheckCircle2 as CheckCircle2Icon,
   XCircle as XCircleIcon,
   Loader2 as Loader2Icon,
@@ -47,7 +19,8 @@ import {
   Trash2 as Trash2Icon,
   ExternalLink as ExternalLinkIcon,
   Navigation as NavigationIcon,
-  FileText
+  FileText,
+  Plus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -58,6 +31,13 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import Link from "next/link";
 import { format } from "date-fns";
+
+const statColorClasses: Record<string, { bg: string; icon: string }> = {
+  blue: { bg: "bg-blue-100 dark:bg-blue-900/30", icon: "text-blue-600" },
+  emerald: { bg: "bg-emerald-100 dark:bg-emerald-900/30", icon: "text-emerald-600" },
+  amber: { bg: "bg-amber-100 dark:bg-amber-900/30", icon: "text-amber-600" },
+  rose: { bg: "bg-rose-100 dark:bg-rose-900/30", icon: "text-rose-600" },
+};
 
 interface Booking {
   id: string;
@@ -277,8 +257,8 @@ export default function DashboardPage() {
               className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800"
             >
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-xl bg-${stat.color}-100 dark:bg-${stat.color}-900/30 flex items-center justify-center`}>
-                  <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+                <div className={`w-12 h-12 rounded-xl ${statColorClasses[stat.color]?.bg || ""} flex items-center justify-center`}>
+                  <stat.icon className={`w-6 h-6 ${statColorClasses[stat.color]?.icon || ""}`} />
                 </div>
                 <div>
                   <p className="text-sm text-zinc-500">{stat.label}</p>

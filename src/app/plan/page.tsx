@@ -81,7 +81,7 @@ export default function PlanPage() {
     <div className="pt-24 pb-24 bg-white dark:bg-zinc-950">
       {/* Hero Section */}
       <section className="relative px-4 mx-auto max-w-7xl mb-16">
-        <div className="bg-zinc-900 rounded-[48px] overflow-hidden p-12 md:p-20 relative min-h-[500px] flex items-center">
+        <div className="bg-zinc-900 rounded-3xl sm:rounded-[48px] overflow-hidden p-6 sm:p-12 md:p-20 relative min-h-[500px] flex items-center">
           <div className="absolute inset-0 z-0">
             <img 
               src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/a29adf43-7e98-417c-aefd-75668f7c760a/barnabas-lartey-odoi-tetteh-5YdLNHzwux4-unsplash-resized-1768190173443.jpg" 
